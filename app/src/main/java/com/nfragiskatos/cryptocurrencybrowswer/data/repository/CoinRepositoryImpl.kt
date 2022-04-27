@@ -18,35 +18,45 @@ class CoinRepositoryImpl @Inject constructor(
     private val api: CoinPaprikaApi
 ) : CoinRepository {
 
-    override suspend fun getCoins(): Flow<Resource<List<Coin>>> {
+    override suspend fun getCoins(): Flow<Resource<List<Coin>>> = flow {
+        emit(Resource.Loading(true))
 
-        return flow {
-            emit(Resource.Loading(true))
-
-            val remote: List<CoinDto>? = try {
-                api.getCoins()
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error("Error loading coins"))
-                null
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't reach server. Please check your internet connection."))
-                null
-            }
-
-            remote?.let { coinDto ->
-                emit(Resource.Success(data = coinDto.map { it.toCoin() }))
-            }
-            emit(Resource.Loading(false))
+        val response: List<CoinDto>? = try {
+            api.getCoins()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            emit(Resource.Error("Error loading coins"))
+            null
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            emit(Resource.Error("Couldn't reach server. Please check your internet connection."))
+            null
         }
+
+        response?.let { coinDto ->
+            emit(Resource.Success(data = coinDto.map { it.toCoin() }))
+        }
+        emit(Resource.Loading(false))
     }
 
-    override suspend fun getCoin(coinId: String): Resource<CoinDetail> {
-        return Resource.Success<CoinDetail>(
+
+    override suspend fun getCoin(coinId: String): Flow<Resource<CoinDetail>> = flow {
+        emit(Resource.Loading(true))
+        val response = try {
             api.getCoinById(coinId)
-                .toCoinDetail()
-        )
+        } catch (e: IOException) {
+            e.printStackTrace()
+            emit(Resource.Error("Error loading coin details"))
+            null
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            emit(Resource.Error("Couldn't reach server. Please check your internet connection."))
+            null
+        }
+        response?.let {
+            emit(Resource.Success(data = it.toCoinDetail()))
+        }
+        emit(Resource.Loading(false))
     }
 
 }

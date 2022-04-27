@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface CoinRepository {
 
     suspend fun getCoins() : Flow<Resource<List<Coin>>>
-    suspend fun getCoin(coinId: String) : Resource<CoinDetail>
+    suspend fun getCoin(coinId: String) : Flow<Resource<CoinDetail>>
 }
