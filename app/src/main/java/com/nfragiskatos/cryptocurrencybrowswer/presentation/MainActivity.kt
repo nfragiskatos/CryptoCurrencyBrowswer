@@ -1,4 +1,4 @@
-package com.nfragiskatos.cryptocurrencybrowswer
+package com.nfragiskatos.cryptocurrencybrowswer.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
