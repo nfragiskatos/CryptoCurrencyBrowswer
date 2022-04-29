@@ -3,7 +3,7 @@ package com.nfragiskatos.cryptocurrencybrowswer.data.remote
 import com.nfragiskatos.cryptocurrencybrowswer.data.remote.dto.CoinDetailDto
 import com.nfragiskatos.cryptocurrencybrowswer.data.remote.dto.CoinDto
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface CoinPaprikaApi {
 
@@ -11,7 +11,7 @@ interface CoinPaprikaApi {
     suspend fun getCoins(): List<CoinDto>
 
     @GET("/v1/coins/{coinId}")
-    suspend fun getCoinById(@Query("coinId") coinId: String): CoinDetailDto
+    suspend fun getCoinById(@Path("coinId") coinId: String): CoinDetailDto
 
 
 }

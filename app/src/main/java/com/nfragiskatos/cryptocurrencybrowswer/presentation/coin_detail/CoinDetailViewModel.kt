@@ -1,7 +1,8 @@
 package com.nfragiskatos.cryptocurrencybrowswer.presentation.coin_detail
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.nfragiskatos.cryptocurrencybrowswer.common.Constants
 import com.nfragiskatos.cryptocurrencybrowswer.common.Resource
 import com.nfragiskatos.cryptocurrencybrowswer.domain.use_case.get_coin.GetCoinUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,8 +20,7 @@ class CoinDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(CoinDetailState())
-    val state: State<CoinDetailState> = _state
+    var state: CoinDetailState by mutableStateOf(CoinDetailState())
 
     init {
         savedStateHandle.get<String>(Constants.PARAM_COIN_ID)
@@ -32,17 +33,17 @@ class CoinDetailViewModel @Inject constructor(
         viewModelScope.launch {
             getCoinUseCase(coinId)
                 .collect { result ->
-                    when (result) {
+                    state = when (result) {
                         is Resource.Error -> {
-                            _state.value = CoinDetailState(
+                            state.copy(
                                 error = result.message ?: "An unexpected error occurred"
                             )
                         }
                         is Resource.Loading -> {
-                            _state.value = CoinDetailState(isLoading = result.isLoading)
+                            state.copy(isLoading = result.isLoading)
                         }
                         is Resource.Success -> {
-                            _state.value = CoinDetailState(coinDetail = result.data)
+                            state.copy(coinDetail = result.data)
                         }
                     }
                 }

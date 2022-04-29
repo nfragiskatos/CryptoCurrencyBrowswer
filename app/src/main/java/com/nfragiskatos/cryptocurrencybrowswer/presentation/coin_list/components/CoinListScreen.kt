@@ -24,7 +24,7 @@ fun CoinListScreen(
     navController: NavController,
     viewModel: CoinListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {

@@ -23,7 +23,7 @@ import com.nfragiskatos.cryptocurrencybrowswer.presentation.coin_detail.CoinDeta
 fun CoinDetailScreen(
     viewModel: CoinDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state
 
     Box(modifier = Modifier.fillMaxSize()) {
 
