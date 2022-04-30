@@ -13,5 +13,5 @@ class GetCoinUseCase @Inject constructor(
     private val repository: CoinRepository
 ) {
 
-    suspend operator fun invoke(coinId: String) : Flow<Resource<CoinDetail>> = repository.getCoin(coinId)
+    operator fun invoke(coinId: String) : Flow<Resource<CoinDetail>> = repository.getCoin(coinId)
 }
